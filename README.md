@@ -12,6 +12,8 @@ To setup :
 - create database with ./database/init.sql
 - Copy .env.example to .env
 - Update the .env
+- run : php artisan storage:link , to publish upload folder
+- run : php artisan optimize, to apply changes in .env
 
 To run : 
 - Laravel : php artisan serve

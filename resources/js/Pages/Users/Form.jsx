@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect,useState } from 'react';
 import { useForm, usePage, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -11,19 +11,11 @@ export default function Form({ user, roles, groups, auth }) {
   const isEdit = !!user;
   const { errors, alertTimer } = usePage().props;
   const photoInput = useRef();
+  const [removePhoto, setRemovePhoto] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(null);
 
   useEffect(() => {
-     if (user?.photo) {
-      const file = user.photo.split('/').pop();
-      const filePath = `/storage/${file}`;
-      const fileName = file.split('.').slice(0, -1).join('.');
-      const fileType = file.split('.').pop();
-      const fileObject = new File([filePath], fileName, { type: `image/${fileType}` });
-      setData('photo', fileObject);
-      photoInput.current.files = new DataTransfer().files;
-      photoInput.current.files[0] = fileObject;
-    }
-
+    // Check if there are any errors
     if (Object.keys(errors).length > 0) {
        Object.values(errors).forEach((msg) => {
         toast.error(msg, {
@@ -47,13 +39,23 @@ export default function Form({ user, roles, groups, auth }) {
     role: user?.roles?.[0]?.name || '',
     user_group_id: user?.user_group_id || '',
     photo: null,
-    _method:isEdit?'PUT':'POST'
+    _method:isEdit?'PUT':'POST',
+    remove_photo: false,
   });
 
   // Handle file change
   const handlePhotoChange = (e) => {
-    setData('photo', e.target.files[0]);
-  };
+      const file = e.target.files[0];
+      setData('photo', file);
+      setRemovePhoto(true);
+      setData('remove_photo', true);
+
+      if (file) {
+        setPhotoPreview(URL.createObjectURL(file));
+      } else {
+        setPhotoPreview(null);
+      }
+    };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -153,12 +155,52 @@ export default function Form({ user, roles, groups, auth }) {
                   onChange={handlePhotoChange}
                   className="border rounded px-3 py-2 w-full"
                 />
-                {user?.photo && (
-                  <img
-                    src={`/storage/${user.photo}`}
-                    alt="Profile"
-                    className="mt-2 h-32 w-32 object-cover rounded-full"
-                  />
+                
+                {photoPreview ? (
+                  <div className="mt-2 flex items-center gap-2">
+                    <img
+                      src={photoPreview}
+                      alt="Preview"
+                      className="h-32 w-32 object-cover rounded-full"
+                    />
+                    <button
+                      type="button"
+                      className="ml-2 px-3 py-1 bg-red-500 text-white rounded"
+                      onClick={() => {
+                        setRemovePhoto(true);
+                        setData('photo', null);
+                        setData('remove_photo', true);
+                        setPhotoPreview(null);
+                        if (photoInput.current) photoInput.current.value = '';
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : user?.photo && !removePhoto ? (
+                  <div className="mt-2 flex items-center gap-2">
+                    <img
+                      src={`/storage/${user.photo}`}
+                      alt="Profile"
+                      className="h-32 w-32 object-cover rounded-full"
+                    />
+                    <button
+                      type="button"
+                      className="ml-2 px-3 py-1 bg-red-500 text-white rounded"
+                      onClick={() => {
+                        setRemovePhoto(true);
+                        setData('photo', null);
+                        setData('remove_photo', true);
+                        setPhotoPreview(null);
+                        if (photoInput.current) photoInput.current.value = '';
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : null}
+                {removePhoto && !photoPreview && (
+                  <div className="text-sm text-gray-500 mt-2">Image will be removed after saving.</div>
                 )}
                 {errors.photo && <div className="text-red-500 text-sm mt-1">{errors.photo}</div>}
               </div>

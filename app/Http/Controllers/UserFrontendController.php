@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\UserGroup as Group; 
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UserFrontendController extends Controller
 {
@@ -91,6 +92,15 @@ class UserFrontendController extends Controller
         Log::info('UPDATE DATA', $request->all());
 
         $validated = $request->validated();
+
+        if ($request->input('remove_photo')) {
+            // Remove the photo from storage if needed
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
+                $user->photo = null;
+            }
+        }
+        
         if ($request->hasFile('photo')) {
             $validated['photo'] = $request->file('photo')->store('photos', 'public');
         }
@@ -100,6 +110,8 @@ class UserFrontendController extends Controller
         } else {
             unset($validated['password']);
         }
+
+        
 
         $user->update($validated);
         $user->syncRoles([$validated['role']]); // Sync roles using Spatie

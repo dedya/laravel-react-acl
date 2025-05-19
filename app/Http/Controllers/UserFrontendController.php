@@ -36,6 +36,7 @@ class UserFrontendController extends Controller
         return Inertia::render('Users/Index', [
             'users' => $query->paginate(10)->withQueryString(),
             'filters' => $request->only(['name', 'email']),
+            'alertTimer' => config('app.alert_timer'),            
          ]);
     }
 
@@ -48,6 +49,7 @@ class UserFrontendController extends Controller
             'user' => null,
             'roles' => $roles,
             'groups' => $groups,
+            'alertTimer' => config('app.alert_timer'),
         ]);
     }
 
@@ -79,7 +81,8 @@ class UserFrontendController extends Controller
         return Inertia::render('Users/Form', [
             'user' => $user,
             'roles' => $roles,
-            'groups' => $groups
+            'groups' => $groups,
+            'alertTimer' => config('app.alert_timer'),
         ]);
     }
 

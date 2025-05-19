@@ -183,6 +183,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+    
+    'alert_timer' => env('ALERT_TIMER', 4000),
     ])->toArray(),
 
 ];

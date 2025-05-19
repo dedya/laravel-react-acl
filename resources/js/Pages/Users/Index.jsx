@@ -10,7 +10,7 @@ import { can } from '@/utils/can';
 import { FaEdit, FaTrashAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa'; // Add this line
 
 export default function Index({ auth }) {
-  const { users, flash, labels, filters} = usePage().props;
+  const { users, flash, labels, filters, alertTimer} = usePage().props;
 
    // State for filter form
   const [filter, setFilter] = useState({
@@ -57,7 +57,7 @@ export default function Index({ auth }) {
                   ? labels.delete_success.replace(':name', userName)
                   : `User "${userName}" is deleted successfully!`),
                 showConfirmButton: false,
-                timer: 2000,
+                timer: alertTimer || 4000,
                 timerProgressBar: true,
                 background: '#d1fae5',
                 color: '#166534',

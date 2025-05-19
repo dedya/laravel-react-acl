@@ -1,13 +1,44 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useForm, usePage, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { can } from '@/utils/can';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function Form({ user, roles, groups, auth }) {
   const isEdit = !!user;
-  const { errors } = usePage().props;
+  const { errors, alertTimer } = usePage().props;
   const photoInput = useRef();
+
+  useEffect(() => {
+     if (user?.photo) {
+      const file = user.photo.split('/').pop();
+      const filePath = `/storage/${file}`;
+      const fileName = file.split('.').slice(0, -1).join('.');
+      const fileType = file.split('.').pop();
+      const fileObject = new File([filePath], fileName, { type: `image/${fileType}` });
+      setData('photo', fileObject);
+      photoInput.current.files = new DataTransfer().files;
+      photoInput.current.files[0] = fileObject;
+    }
+
+    if (Object.keys(errors).length > 0) {
+       Object.values(errors).forEach((msg) => {
+        toast.error(msg, {
+          position: "top-right",
+          autoClose: alertTimer || 4000, // or use a prop/config value
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      });
+    }
+  }, [user, errors]);
 
   const { data, setData, post, put, processing } = useForm({
     name: user?.name || '',
@@ -44,7 +75,7 @@ export default function Form({ user, roles, groups, auth }) {
       <Head title={isEdit ? 'Edit User' : 'Create User'} />
       <div className="max-w-xl mx-auto py-8">
         <div className="bg-white rounded shadow p-6">
-          <form onSubmit={handleSubmit} className="space-y-5" enctype="multipart/form-data">
+          <form onSubmit={handleSubmit} className="space-y-5" encType="multipart/form-data">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
               <input
@@ -154,6 +185,7 @@ export default function Form({ user, roles, groups, auth }) {
           </form>
         </div>
       </div>
+        <ToastContainer />
     </AuthenticatedLayout>
   );
 }

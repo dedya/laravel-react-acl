@@ -45,4 +45,29 @@ class UserRequest extends FormRequest
               
         return $rules;
     }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Name is required',
+            'role.required' => 'Role is required',
+            'user_group_id.required' => 'User group is required',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email must be a valid email address',
+            'email.unique' => 'Email already exists',
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 6 characters',
+        ];
+    }
+    
+    public function attributes()
+    {
+        return [
+            'name' => 'Name',
+            'role' => 'Role',
+            'user_group_id' => 'User group',
+            'email' => 'Email',
+            'password' => 'Password',
+        ];
+    }
 }

@@ -7,6 +7,9 @@ import { can } from '@/utils/can';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 export default function Form({ user, roles, groups, auth }) {
   const isEdit = !!user;
   const { errors, alertTimer } = usePage().props;
@@ -156,49 +159,57 @@ export default function Form({ user, roles, groups, auth }) {
                   className="border rounded px-3 py-2 w-full"
                 />
                 
-                {photoPreview ? (
-                  <div className="mt-2 flex items-center gap-2">
+                {(photoPreview || (user?.photo && !removePhoto)) && (
+                  <div className="mt-2 relative inline-block">
                     <img
-                      src={photoPreview}
+                      src={photoPreview ? photoPreview : `/storage/${user.photo}`}
                       alt="Preview"
                       className="h-32 w-32 object-cover rounded-full"
                     />
                     <button
                       type="button"
-                      className="ml-2 px-3 py-1 bg-red-500 text-white rounded"
-                      onClick={() => {
-                        setRemovePhoto(true);
-                        setData('photo', null);
-                        setData('remove_photo', true);
-                        setPhotoPreview(null);
-                        if (photoInput.current) photoInput.current.value = '';
+                      className="absolute top-0 right-0 m-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center opacity-70 hover:opacity-100"
+                      title="Remove photo"
+                      style={{ transform: 'translate(50%,-50%)' }}
+                      onClick={async () => {
+                        const result = await Swal.fire({
+                          title: 'Delete Photo?',
+                          text: "Are you sure you want to remove this photo?",
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#d33',
+                          cancelButtonColor: '#3085d6',
+                          confirmButtonText: 'Yes, remove it!',
+                          cancelButtonText: 'Cancel',
+                          toast: false,
+                          background: '#fff',
+                        });
+                        if (result.isConfirmed) {
+                          setRemovePhoto(true);
+                          setData('photo', null);
+                          setData('remove_photo', true);
+                          setPhotoPreview(null);
+                          if (photoInput.current) photoInput.current.value = '';
+                          Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Photo will be removed after saving.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            background: '#f0fdf4',
+                            color: '#166534',
+                          });
+                        }
                       }}
                     >
-                      Remove
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
                     </button>
                   </div>
-                ) : user?.photo && !removePhoto ? (
-                  <div className="mt-2 flex items-center gap-2">
-                    <img
-                      src={`/storage/${user.photo}`}
-                      alt="Profile"
-                      className="h-32 w-32 object-cover rounded-full"
-                    />
-                    <button
-                      type="button"
-                      className="ml-2 px-3 py-1 bg-red-500 text-white rounded"
-                      onClick={() => {
-                        setRemovePhoto(true);
-                        setData('photo', null);
-                        setData('remove_photo', true);
-                        setPhotoPreview(null);
-                        if (photoInput.current) photoInput.current.value = '';
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ) : null}
+                )}
+
                 {removePhoto && !photoPreview && (
                   <div className="text-sm text-gray-500 mt-2">Image will be removed after saving.</div>
                 )}

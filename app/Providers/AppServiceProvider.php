@@ -20,12 +20,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
         Inertia::share([
             'labels' => function () {
                 return Lang::get('labels');
             },
              'permissions' => fn () => auth()->check()
-                ? auth()->user()->getAllPermissions()->pluck('name')
+                ? $user->getAllPermissions()->pluck('name')
+                
             : [],
     ]);
     }

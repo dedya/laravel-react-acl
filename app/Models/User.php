@@ -11,7 +11,10 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
 
-
+/**
+ * @property \Illuminate\Support\Collection $permissions
+ * @method \Illuminate\Support\Collection getAllPermissions()
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;

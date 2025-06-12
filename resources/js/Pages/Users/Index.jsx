@@ -10,7 +10,7 @@ import { can } from '@/utils/can';
 import { FaEdit, FaTrashAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa'; // Add this line
 
 export default function Index({ auth }) {
-  const { users, flash, labels, filters, alertTimer} = usePage().props;
+  const { users, flash, general, filters, alertTimer} = usePage().props;
 
    // State for filter form
   const [filter, setFilter] = useState({
@@ -35,13 +35,13 @@ export default function Index({ auth }) {
   const handleDelete = (e, userId, userName) => {
     e.preventDefault();
     Swal.fire({
-      title: labels?.delete_confirm_title || 'Are you sure?',
-      text: labels?.delete_confirm_text || 'This user will be deleted permanently!',
+      title: general?.delete_confirm_title || 'Are you sure?',
+      text: general?.delete_confirm_text || 'This user will be deleted permanently!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: labels?.delete_confirm_yes || 'Yes, delete it!',
+      confirmButtonText: general?.delete_confirm_yes || 'Yes, delete it!',
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
@@ -53,8 +53,8 @@ export default function Index({ auth }) {
                 position: 'top-end',
                 icon: 'success',
                 title:
-                  (labels?.delete_success
-                  ? labels.delete_success.replace(':name', userName)
+                  (general?.delete_success
+                  ? general.delete_success.replace(':name', userName)
                   : `User "${userName}" is deleted successfully!`),
                 showConfirmButton: false,
                 timer: alertTimer || 4000,
@@ -91,21 +91,21 @@ export default function Index({ auth }) {
       user={auth.user}
       header={
         <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-          {labels?.user_list_title || 'User List'}
+          {general?.user_list_title || 'User List'}
         </h2>
       }
     >
-      <Head title={labels?.users_page_title || 'Users'} />
+      <Head title={general?.users_page_title || 'Users'} />
 
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold text-gray-700">{labels?.users_table_title || 'Users'}</h3>
+          <h3 className="text-lg font-bold text-gray-700">{general?.users_table_title || 'Users'}</h3>
           {can('create-user') && (
             <Link
               href={route('users.create')}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
               >
-                {labels?.add_user_button || '+ Add User'}
+                {general?.add_user_button || '+ Add User'}
             </Link>
           )}
 
@@ -165,7 +165,7 @@ export default function Index({ auth }) {
               {users.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-4 py-4 text-center text-gray-400">
-                    {labels?.no_users_found || 'No users found.'}
+                    {general?.no_users_found || 'No users found.'}
                   </td>
                 </tr>
               )}

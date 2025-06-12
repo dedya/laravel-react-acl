@@ -8,19 +8,19 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'; // Add this line
 
 export default function RoleIndex({ auth }) {
-  const { roles, flash, labels } = usePage().props;
+  const { roles, flash, general } = usePage().props;
 
     // Handler for delete confirmation using SweetAlert2
     const handleDelete = (e, roleId, roleName) => {
       e.preventDefault();
       Swal.fire({
-        title: labels?.delete_confirm_title || 'Are you sure?',
-        text: labels?.delete_confirm_text || 'This role will be deleted permanently!',
+        title: general?.delete_confirm_title || 'Are you sure?',
+        text: general?.delete_confirm_text || 'This role will be deleted permanently!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: labels?.delete_confirm_yes || 'Yes, delete it!',
+        confirmButtonText: general?.delete_confirm_yes || 'Yes, delete it!',
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
@@ -32,8 +32,8 @@ export default function RoleIndex({ auth }) {
                   position: 'top-end',
                   icon: 'success',
                   title:
-                    (labels?.delete_success
-                    ? labels.delete_success.replace(':name', roleName)
+                    (general?.delete_success
+                    ? general.delete_success.replace(':name', roleName)
                     : `Role "${roleName}" is deleted successfully!`),
                   showConfirmButton: false,
                   timer: 2000,

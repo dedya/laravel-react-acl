@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\UserFrontendController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -44,14 +44,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/users', [UserFrontendController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserFrontendController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserFrontendController::class, 'store'])->name('users.store');
-    Route::get('/users/{user}/edit', [UserFrontendController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserFrontendController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserFrontendController::class, 'destroy'])->name('users.destroy');
-    Route::patch('/users/{user}/enable', [UserFrontendController::class, 'enable'])->name('users.enable');
-    Route::patch('/users/{user}/disable', [UserFrontendController::class, 'disable'])->name('users.disable');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::patch('/users/{user}/enable', [UserController::class, 'enable'])->name('users.enable');
+    Route::patch('/users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
 
     Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
     Route::get('/roles/create', [RolePermissionController::class, 'create'])->name('roles.create');

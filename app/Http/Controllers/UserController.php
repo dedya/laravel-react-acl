@@ -12,7 +12,7 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class UserFrontendController extends Controller
+class UserController extends Controller
 {
     function __construct() {
         $this->middleware('permission:create-user')->only('create', 'store', 'enable','disable');

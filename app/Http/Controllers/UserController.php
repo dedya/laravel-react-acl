@@ -54,24 +54,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function store(UserRequest $request)
-    {
-        $validated = $request->validated();
-        Log::info('CREATE DATA', $request->all());
-        
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('photos', 'public');
-        }
-
-        $validated['password'] = Hash::make($validated['password']);
-        $user = User::create($validated);
-
-        $user->assignRole($validated['role']); // Assign role using Spatie
-        $message = "{$user->name} is updated";
-
-        return redirect()->route('users.index')->with('success', $message);
-    }
-
     public function edit(User $user)
     {
         $user->load(['roles','userGroup']); // Load roles and group relationships
@@ -87,37 +69,14 @@ class UserController extends Controller
         ]);
     }
 
+    public function store(UserRequest $request)
+    {
+        return $this->saveUser($request);
+    }
+
     public function update(UserRequest $request, User $user)
     {
-        Log::info('UPDATE DATA', $request->all());
-
-        $validated = $request->validated();
-
-        if ($request->input('remove_photo')) {
-            // Remove the photo from storage if needed
-            if ($user->photo) {
-                Storage::disk('public')->delete($user->photo);
-                $user->photo = null;
-            }
-        }
-        
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('photos', 'public');
-        }
-        
-        if ($validated['password']) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-
-        
-
-        $user->update($validated);
-        $user->syncRoles([$validated['role']]); // Sync roles using Spatie
-
-        $message = "{$user->name} is updated";
-        return redirect()->route('users.index')->with('success', $message);
+        return $this->saveUser($request, $user);
     }
 
     public function destroy(User $user)
@@ -148,5 +107,41 @@ class UserController extends Controller
         Log::info('ENABLE USER', ['id' => $user->id, 'query' => $query]);
         $message = "{$user->name} is set to disable";
         return redirect()->route('users.index', $query)->with('success',$message);
+    }
+
+    private function saveUser(UserRequest $request, ?User $user = null)
+    {
+        $validated = $request->validated();
+        Log::info($user ? 'UPDATE DATA' : 'CREATE DATA', $request->all());
+
+        // Handle photo removal
+        if ($request->input('remove_photo') && $user && $user->photo) {
+            Storage::disk('public')->delete($user->photo);
+            $user->photo = null;
+        }
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
+        // Handle password
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        if ($user) {
+            $user->update($validated);
+            $user->syncRoles([$validated['role']]);
+            $message = "{$user->name} is updated";
+        } else {
+            $user = User::create($validated);
+            $user->assignRole($validated['role']);
+            $message = "{$user->name} is created";
+        }
+
+        return redirect()->route('users.index')->with('success', $message);
     }
 }

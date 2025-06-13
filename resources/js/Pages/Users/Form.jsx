@@ -12,7 +12,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 export default function Form({ user, roles, groups, auth }) {
   const isEdit = !!user;
-  const { errors, alertTimer } = usePage().props;
+  const { errors, alertTimer, general} = usePage().props;
   const photoInput = useRef();
   const [removePhoto, setRemovePhoto] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -82,7 +82,7 @@ export default function Form({ user, roles, groups, auth }) {
         <div className="bg-white rounded shadow p-6">
           <form onSubmit={handleSubmit} className="space-y-5" encType="multipart/form-data">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{general?.name}</label>
               <input
                 className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
                 value={data.name}
@@ -92,7 +92,7 @@ export default function Form({ user, roles, groups, auth }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{general?.email}</label>
               <input
                 type="email"
                 className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
@@ -104,7 +104,7 @@ export default function Form({ user, roles, groups, auth }) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password {isEdit ? <span className="text-xs text-gray-400">(leave blank to keep current)</span> : ''}
+                {general?.password} {isEdit ? <span className="text-xs text-gray-400">({general?.leave_blank})</span> : ''}
               </label>
               <input
                 type="password"
@@ -122,7 +122,7 @@ export default function Form({ user, roles, groups, auth }) {
                 value={data.role}
                 onChange={(e) => setData('role', e.target.value)}
               >
-                <option value="">Select Role</option>
+                <option value=""></option>
                 {roles.map((role) => (
                   <option key={role.name} value={role.name}>
                     {role.name}
@@ -133,13 +133,13 @@ export default function Form({ user, roles, groups, auth }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Group</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{general?.user_group}</label>
               <select
                 className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
                 value={data.user_group_id}
                 onChange={(e) => setData('user_group_id', e.target.value)}
               >
-                <option value="">Select Group</option>
+                <option value=""></option>
                 {groups.map((group) => (
                   <option key={group.id} value={group.id}>
                     {group.name}
@@ -150,7 +150,7 @@ export default function Form({ user, roles, groups, auth }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Profile Photo</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{general.profile_image}</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -173,8 +173,8 @@ export default function Form({ user, roles, groups, auth }) {
                       style={{ transform: 'translate(50%,-50%)' }}
                       onClick={async () => {
                         const result = await Swal.fire({
-                          title: 'Delete Photo?',
-                          text: "Are you sure you want to remove this photo?",
+                          title: general?.delete_confirm_title,
+                          text: general?.delete_image_confirm_text,
                           icon: 'warning',
                           showCancelButton: true,
                           confirmButtonColor: '#d33',
@@ -194,7 +194,7 @@ export default function Form({ user, roles, groups, auth }) {
                             toast: true,
                             position: 'top-end',
                             icon: 'success',
-                            title: 'Photo will be removed after saving.',
+                            title: general?.image_will_removed_after_save,
                             showConfirmButton: false,
                             timer: 2000,
                             background: '#f0fdf4',
@@ -211,7 +211,7 @@ export default function Form({ user, roles, groups, auth }) {
                 )}
 
                 {removePhoto && !photoPreview && (
-                  <div className="text-sm text-gray-500 mt-2">Image will be removed after saving.</div>
+                  <div className="text-sm text-gray-500 mt-2">{general?.image_will_removed_after_save}</div>
                 )}
                 {errors.photo && <div className="text-red-500 text-sm mt-1">{errors.photo}</div>}
               </div>

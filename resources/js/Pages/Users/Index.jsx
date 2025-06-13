@@ -35,7 +35,7 @@ export default function Index({ auth }) {
   const handleDelete = (e, userId, userName) => {
     e.preventDefault();
     Swal.fire({
-      title: general?.delete_confirm_title || 'Are you sure?',
+      title: general?.delete_confirm_title || 'Are you sure ?',
       text: general?.delete_confirm_text || 'This user will be deleted permanently!',
       icon: 'warning',
       showCancelButton: true,
@@ -45,26 +45,24 @@ export default function Index({ auth }) {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        if (result.isConfirmed) {
-            router.delete(route('users.destroy', userId),{
-              onSuccess: () => {
-              Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title:
-                  (general?.delete_success
-                  ? general.delete_success.replace(':name', userName)
-                  : `User "${userName}" is deleted successfully!`),
-                showConfirmButton: false,
-                timer: alertTimer || 4000,
-                timerProgressBar: true,
-                background: '#d1fae5',
-                color: '#166534',
-              });
-            },
-          });
-        }
+      router.delete(route('users.destroy', userId), {
+        onSuccess: () => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title:
+          (general?.delete_success
+            ? general.delete_success.replace(':name', userName)
+            : `User "${userName}" is deleted successfully!`),
+          showConfirmButton: false,
+          timer: alertTimer || 4000,
+          timerProgressBar: true,
+          background: '#d1fae5',
+          color: '#166534',
+        });
+        },
+      });
       }
     });
   };
@@ -99,16 +97,15 @@ export default function Index({ auth }) {
 
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold text-gray-700">{general?.users_table_title || 'Users'}</h3>
+          <div></div>
           {can('create-user') && (
             <Link
               href={route('users.create')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow ml-auto"
               >
-                {general?.add_user_button || '+ Add User'}
+                {general?.add_button || '+ Add'}
             </Link>
           )}
-
         </div>
 
         {/* Filter Form */}
@@ -117,17 +114,17 @@ export default function Index({ auth }) {
           className="flex flex-wrap gap-4 items-end mb-4 bg-gray-50 p-4 rounded"
         >
           <div>
-            <label className="block text-xs text-gray-600 mb-1">Name</label>
+            <label className="block text-xs text-gray-600 mb-1">{general?.name || "Name"}</label>
             <input
               type="text"
               className="border rounded px-2 py-1"
               value={filter.name}
               onChange={e => setFilter(f => ({ ...f, name: e.target.value }))}
-              placeholder="Search name"
+              placeholder={general?.search_name||"Search name"}
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-600 mb-1">Email</label>
+            <label className="block text-xs text-gray-600 mb-1">{general?.email || "Email"}</label>
             <input
               type="text"
               className="border rounded px-2 py-1"
@@ -154,11 +151,11 @@ export default function Index({ auth }) {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{general?.id || "ID"}</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{general?.name || "Name"}</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{general?.email || "Email"}</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{general?.role || "Role"}</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">{general?.actions || "Actions"}</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">

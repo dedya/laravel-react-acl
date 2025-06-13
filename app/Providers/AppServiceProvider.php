@@ -21,8 +21,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Inertia::share([
-            'labels' => function () {
-                return Lang::get('labels');
+            'general' => function () {
+                return Lang::get('general');
             },
             'permissions' => function () {
                 if (!auth()->check()) {

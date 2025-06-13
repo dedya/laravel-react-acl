@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property \Illuminate\Support\Collection $permissions
@@ -19,6 +20,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles, HasPermissions;
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *

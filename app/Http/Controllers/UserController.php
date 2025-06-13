@@ -11,6 +11,8 @@ use App\Models\UserGroup as Group;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\UpdateUser;
+use App\Jobs\DeleteUser;
 
 class UserController extends Controller
 {
@@ -71,17 +73,26 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        return $this->saveUser($request);
+        $validated = $request->validated();
+        dispatch(new UpdateUser($validated));
+        $userName = $validated['name'];        
+        $message = "{$userName} is created";
+        return redirect()->route('users.index')->with('success', $message);
     }
 
     public function update(UserRequest $request, User $user)
     {
-        return $this->saveUser($request, $user);
+        $validated = $request->validated();
+        dispatch(new UpdateUser($validated,$user));
+        $userName = $user->name;
+        $message = "{$userName} is updated";
+        return redirect()->route('users.index')->with('success', $message);
+
     }
 
     public function destroy(User $user)
     {
-        $user->delete();
+        dispatch(new DeleteUser($user, auth()->id()));
         $message = "{$user->name} is deleted";
         return redirect()->route('users.index')->with('success', $message);
     }
@@ -107,41 +118,5 @@ class UserController extends Controller
         Log::info('ENABLE USER', ['id' => $user->id, 'query' => $query]);
         $message = "{$user->name} is set to disable";
         return redirect()->route('users.index', $query)->with('success',$message);
-    }
-
-    private function saveUser(UserRequest $request, ?User $user = null)
-    {
-        $validated = $request->validated();
-        Log::info($user ? 'UPDATE DATA' : 'CREATE DATA', $request->all());
-
-        // Handle photo removal
-        if ($request->input('remove_photo') && $user && $user->photo) {
-            Storage::disk('public')->delete($user->photo);
-            $user->photo = null;
-        }
-
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('photos', 'public');
-        }
-
-        // Handle password
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-
-        if ($user) {
-            $user->update($validated);
-            $user->syncRoles([$validated['role']]);
-            $message = "{$user->name} is updated";
-        } else {
-            $user = User::create($validated);
-            $user->assignRole($validated['role']);
-            $message = "{$user->name} is created";
-        }
-
-        return redirect()->route('users.index')->with('success', $message);
     }
 }

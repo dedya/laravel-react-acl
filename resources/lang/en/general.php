@@ -29,5 +29,9 @@ return [
     'save' => 'Save',
     'submit' => 'Submit',
     'search' => 'Search',
-
+    'set_enabled' => ':name is set to enable',
+    'set_disabled' => ':name is set to disable',
+    'data_is_created' => ':name is created successfully',
+    'data_is_updated' => ':name is updated successfully',
+    'data_is_deleted' => ':name is deleted successfully',
 ];

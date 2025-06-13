@@ -47,8 +47,8 @@ export default function Index({ auth }) {
         onSuccess: () => {
         Swal.fire({
           title:
-          (general?.delete_success
-            ? general.delete_success.replace(':name', userName)
+          (general?.data_is_deleted
+            ? general.data_is_deleted.replace(':name', userName)
             : `User "${userName}" is deleted successfully!`),
           timer: alertTimer || 4000,         
           ...swalSuccessDefaults,

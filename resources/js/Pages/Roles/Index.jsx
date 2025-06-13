@@ -32,8 +32,8 @@ export default function RoleIndex({ auth }) {
                   position: 'top-end',
                   icon: 'success',
                   title:
-                    (general?.delete_success
-                    ? general.delete_success.replace(':name', roleName)
+                    (general?.data_is_deleted
+                    ? general.data_is_deleted.replace(':name', roleName)
                     : `Role "${roleName}" is deleted successfully!`),
                   showConfirmButton: false,
                   timer: 2000,

@@ -86,8 +86,8 @@ class UserController extends Controller
         }
 
         dispatch(new UpdateUser($validated));
-        $userName = $validated['name'];        
-        $message = "{$userName} is created";
+        $userName = $validated['name'];
+        $message = __('general.data_is_created', ['name' => $userName]);
         return redirect()->route('users.index')->with('success', $message);
     }
 
@@ -102,15 +102,14 @@ class UserController extends Controller
 
         dispatch(new UpdateUser($validated,$user));
         $userName = $user->name;
-        $message = "{$userName} is updated";
+        $message = __('general.data_is_updated', ['name' => $userName]);
         return redirect()->route('users.index')->with('success', $message);
-
     }
 
     public function destroy(User $user)
     {
         dispatch(new DeleteUser($user, auth()->id()));
-        $message = "{$user->name} is deleted";
+        $message = __('general.data_is_deleted', ['name' => $user->name]);
         return redirect()->route('users.index')->with('success', $message);
     }
 
@@ -121,7 +120,7 @@ class UserController extends Controller
 
         // Ambil filter & page dari request, lalu redirect dengan query string
         $query = $request->only(['name', 'email', 'page']);
-        $message = "{$user->name} is set to enable";
+        $message = __('general.set_enabled', ['name' => $user->name]);
         Log::info('ENABLE USER', ['id' => $user->id, 'query' => $query]);
         return redirect()->route('users.index', $query)->with('success',$message);
     }
@@ -133,7 +132,7 @@ class UserController extends Controller
         
         $query = $request->only(['name', 'email', 'page']);
         Log::info('ENABLE USER', ['id' => $user->id, 'query' => $query]);
-        $message = "{$user->name} is set to disable";
+        $message = __('general.set_disabled', ['name' => $user->name]);
         return redirect()->route('users.index', $query)->with('success',$message);
     }
 }

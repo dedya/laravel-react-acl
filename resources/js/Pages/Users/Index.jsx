@@ -6,6 +6,7 @@ import { Head } from '@inertiajs/react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { can } from '@/utils/can';
+import { swalConfirmDeleteDefaults } from '@/utils/swalConfirmDeleteDefaults';
 
 import { FaEdit, FaTrashAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa'; // Add this line
 
@@ -37,12 +38,9 @@ export default function Index({ auth }) {
     Swal.fire({
       title: general?.delete_confirm_title || 'Are you sure ?',
       text: general?.delete_confirm_text || 'This user will be deleted permanently!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
       confirmButtonText: general?.delete_confirm_yes || 'Yes, delete it!',
-      reverseButtons: true,
+      cancelButtonText: general?.cancel,
+      ...swalConfirmDeleteDefaults,
     }).then((result) => {
       if (result.isConfirmed) {
       router.delete(route('users.destroy', userId), {
@@ -137,7 +135,7 @@ export default function Index({ auth }) {
             type="submit"
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
           >
-            Search
+          {general?.search}
           </button>
         </form>
 

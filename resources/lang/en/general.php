@@ -25,5 +25,9 @@ return [
     'role' => 'Role',
     'edit_user' => 'Edit User',
     'create_user' => 'Create User',
+    'cancel' => 'Cancel',
+    'save' => 'Save',
+    'submit' => 'Submit',
+    'search' => 'Search',
 
 ];

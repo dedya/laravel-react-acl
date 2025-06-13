@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import { swalConfirmDeleteDefaults } from '@/utils/swalConfirmDeleteDefaults';
 
 export default function Form({ user, roles, groups, auth }) {
   const isEdit = !!user;
@@ -181,47 +182,48 @@ export default function Form({ user, roles, groups, auth }) {
                       alt="Preview"
                       className="h-32 w-32 object-cover rounded-full"
                     />
-                    <button
-                      type="button"
-                      className="absolute top-0 right-0 m-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center opacity-70 hover:opacity-100"
-                      title="Remove photo"
-                      style={{ transform: 'translate(50%,-50%)' }}
-                      onClick={async () => {
-                        const result = await Swal.fire({
-                          title: general?.delete_confirm_title,
-                          text: general?.delete_image_confirm_text,
-                          icon: 'warning',
-                          showCancelButton: true,
-                          confirmButtonColor: '#d33',
-                          cancelButtonColor: '#3085d6',
-                          confirmButtonText: 'Yes, remove it!',
-                          cancelButtonText: 'Cancel',
-                          toast: false,
-                          background: '#fff',
-                        });
-                        if (result.isConfirmed) {
-                          setRemovePhoto(true);
-                          setData('photo', null);
-                          setData('remove_photo', true);
-                          setPhotoPreview(null);
-                          if (photoInput.current) photoInput.current.value = '';
-                          Swal.fire({
-                            toast: true,
-                            position: 'top-end',
-                            icon: 'success',
-                            title: general?.image_will_removed_after_save,
-                            showConfirmButton: false,
-                            timer: 2000,
-                            background: '#f0fdf4',
-                            color: '#166534',
+                    {
+                      (can('update-user') || can('create-user')) &&
+
+                      <button
+                        type="button"
+                        className="absolute top-0 right-0 m-1 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center opacity-70 hover:opacity-100"
+                        title="Remove photo"
+                        style={{ transform: 'translate(50%,-50%)' }}
+                        onClick={async () => {
+                          const result = await Swal.fire({
+                            title: general?.delete_confirm_title,
+                            text: general?.delete_image_confirm_text,
+                            icon: 'warning',
+                            confirmButtonText: general?.delete_confirm_yes || 'Yes, delete it!',
+                            cancelButtonText: general?.cancel,
+                            toast: false,
+                            ...swalConfirmDeleteDefaults,                            
                           });
-                        }
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
+                          if (result.isConfirmed) {
+                            setRemovePhoto(true);
+                            setData('photo', null);
+                            setData('remove_photo', true);
+                            setPhotoPreview(null);
+                            if (photoInput.current) photoInput.current.value = '';
+                            Swal.fire({
+                              toast: true,
+                              position: 'top-end',
+                              icon: 'success',
+                              title: general?.image_will_removed_after_save,
+                              showConfirmButton: false,
+                              timer: 2000,
+                              background: '#f0fdf4',
+                              color: '#166534',
+                            });
+                          }
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    }
                   </div>
                 )}
 
@@ -237,18 +239,20 @@ export default function Form({ user, roles, groups, auth }) {
                 href={route('users.index')}
                 className="text-gray-600 hover:underline"
               >
-                Cancel
-              </Link>
-              
-              {can('update-user') &&  
+                {general?.cancel}
+              </Link>              
+              {
+                (can('update-user') || can('create-user')) &&
                 <button
                   type="submit"
                   disabled={processing}
                   className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded shadow disabled:opacity-50"
                 >
-                  {isEdit ? 'Update' : 'Create'}
+                  {general?.submit}
                 </button>
               }
+
+              
             </div>
           </form>
         </div>

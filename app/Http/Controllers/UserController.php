@@ -57,10 +57,10 @@ class UserController extends Controller
     {
         $roles = Role::all(); // Fetch all roles using Spatie
         $groups = Group::all(); // Fetch groups
-        if ($user) { 
+        if ($user && $user->exists) { 
             $user->load(['roles','userGroup']); // Load roles and group relationships
         } else {
-            $user = new User(); // Create a new User instance if not provided
+            $user = null;
         }
         return Inertia::render('Users/Form', [
             'user' => $user,
@@ -79,6 +79,12 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $validated = $request->validated();
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
         dispatch(new UpdateUser($validated));
         $userName = $validated['name'];        
         $message = "{$userName} is created";
@@ -88,6 +94,12 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $validated = $request->validated();
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
         dispatch(new UpdateUser($validated,$user));
         $userName = $user->name;
         $message = "{$userName} is updated";

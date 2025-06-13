@@ -30,11 +30,6 @@ class UpdateUser implements ShouldQueue
             $this->user->photo = null;
         }
 
-        // Handle photo upload
-        if (isset($this->validated['photo']) && is_object($this->validated['photo'])) {
-            $this->validated['photo'] = $this->validated['photo']->store('photos', 'public');
-        }
-
         // Handle password
         if (!empty($this->validated['password'])) {
             $this->validated['password'] = Hash::make($this->validated['password']);

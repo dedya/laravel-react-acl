@@ -118,7 +118,7 @@ class UserController extends Controller
         $user->is_active = true;
         $user->save();
 
-        // Ambil filter & page dari request, lalu redirect dengan query string
+        // get filter and page from requst, then redirect it with query string
         $query = $request->only(['name', 'email', 'page']);
         $message = __('general.set_enabled', ['name' => $user->name]);
         Log::info('ENABLE USER', ['id' => $user->id, 'query' => $query]);

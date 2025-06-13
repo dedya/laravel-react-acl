@@ -103,8 +103,6 @@ return (
                             className="border rounded px-3 py-2 w-full"
                             value={data.name}
                             onChange={e => setData('name', e.target.value)}
-                            disabled={isEdit}
-                            readOnly={isEdit}
                         />
                         {errors.name && (
                          <div className="text-red-500 text-sm mt-1">{errors.name}</div>

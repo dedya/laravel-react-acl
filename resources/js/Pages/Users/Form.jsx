@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import { swalConfirmDeleteDefaults } from '@/utils/swalConfirmDeleteDefaults';
+import { swalConfirmDeleteDefaults } from '@/utils/swalDefaults';
 
 export default function Form({ user, roles, groups, auth }) {
   const isEdit = !!user;

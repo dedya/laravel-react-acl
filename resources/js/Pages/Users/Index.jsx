@@ -6,7 +6,7 @@ import { Head } from '@inertiajs/react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { can } from '@/utils/can';
-import { swalConfirmDeleteDefaults } from '@/utils/swalConfirmDeleteDefaults';
+import { swalSuccessDefaults, swalConfirmDeleteDefaults } from '@/utils/swalDefaults';
 
 import { FaEdit, FaTrashAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa'; // Add this line
 
@@ -46,18 +46,12 @@ export default function Index({ auth }) {
       router.delete(route('users.destroy', userId), {
         onSuccess: () => {
         Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'success',
           title:
           (general?.delete_success
             ? general.delete_success.replace(':name', userName)
             : `User "${userName}" is deleted successfully!`),
-          showConfirmButton: false,
-          timer: alertTimer || 4000,
-          timerProgressBar: true,
-          background: '#d1fae5',
-          color: '#166534',
+          timer: alertTimer || 4000,         
+          ...swalSuccessDefaults,
         });
         },
       });
@@ -69,15 +63,9 @@ export default function Index({ auth }) {
     console.log('flash.success:', flash?.success);
     if (flash?.success) {
       Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
         title: flash.success,
-        showConfirmButton: false,
-        timer: 2500,
-        timerProgressBar: true,
-        background: '#d1fae5',
-        color: '#166534',
+        timer: alertTimer || 4000,         
+          ...swalSuccessDefaults,
       });
     }
   }, [flash?.success]);

@@ -23,5 +23,7 @@ return [
     'delete_image_confirm_text' => 'This Image will be deleted!',
     'search_name' => 'Search by name',
     'role' => 'Role',
+    'edit_user' => 'Edit User',
+    'create_user' => 'Create User',
 
 ];

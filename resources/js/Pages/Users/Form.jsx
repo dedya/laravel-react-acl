@@ -73,16 +73,19 @@ export default function Form({ user, roles, groups, auth }) {
       user={auth?.user}
       header={
         <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-          {isEdit ? 'Edit User' : 'Create User'}
+          {isEdit ? general.edit_user : general.create_user}
         </h2>
       }
     >
-      <Head title={isEdit ? 'Edit User' : 'Create User'} />
+      <Head title={isEdit ? general.edit_user : general.create_user} />
       <div className="max-w-xl mx-auto py-8">
         <div className="bg-white rounded shadow p-6">
           <form onSubmit={handleSubmit} className="space-y-5" encType="multipart/form-data">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{general?.name}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {general?.name}
+                <span className="text-red-500 ml-1">*</span>
+              </label>
               <input
                 className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
                 value={data.name}
@@ -92,7 +95,10 @@ export default function Form({ user, roles, groups, auth }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{general?.email}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {general?.email}
+                <span className="text-red-500 ml-1">*</span>
+              </label>
               <input
                 type="email"
                 className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
@@ -105,6 +111,7 @@ export default function Form({ user, roles, groups, auth }) {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {general?.password} {isEdit ? <span className="text-xs text-gray-400">({general?.leave_blank})</span> : ''}
+                {!isEdit && <span className="text-red-500 ml-1">*</span>}
               </label>
               <input
                 type="password"
@@ -116,7 +123,10 @@ export default function Form({ user, roles, groups, auth }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {general?.role}
+                <span className="text-red-500 ml-1">*</span>
+              </label>
               <select
                 className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
                 value={data.role}
@@ -133,7 +143,10 @@ export default function Form({ user, roles, groups, auth }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{general?.user_group}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {general?.user_group}
+                <span className="text-red-500 ml-1">*</span>
+              </label>
               <select
                 className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
                 value={data.user_group_id}
@@ -150,7 +163,9 @@ export default function Form({ user, roles, groups, auth }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{general.profile_image}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {general.profile_image}
+              </label>
                 <input
                   type="file"
                   accept="image/*"

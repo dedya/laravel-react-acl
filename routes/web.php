@@ -44,22 +44,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::resource('users', UserController::class);
     Route::patch('/users/{user}/enable', [UserController::class, 'enable'])->name('users.enable');
     Route::patch('/users/{user}/disable', [UserController::class, 'disable'])->name('users.disable');
 
-    Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
-    Route::get('/roles/create', [RolePermissionController::class, 'create'])->name('roles.create');
-    Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
-    Route::get('/roles/{role}/edit', [RolePermissionController::class, 'edit'])->name('roles.edit');
-    Route::put('/roles/{role}', [RolePermissionController::class, 'update'])->name('roles.update');
-    Route::delete('/roles/{role}', [RolePermissionController::class, 'destroy'])->name('roles.destroy');
-
+    Route::resource('roles', RolePermissionController::class);
 });
 
 require __DIR__.'/auth.php';

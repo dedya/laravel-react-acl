@@ -11,7 +11,7 @@ class RolePermissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,10 +22,19 @@ class RolePermissionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|string|max:255|unique:roles,name',
             'permissions' => 'array',
             'permissions.*' => 'exists:permissions,name',
         ];
+        
+        if ($this->isMethod('post')) {
+            // Store
+            $rules['name'] = 'required|string|max:255|unique:roles,name';
+        } else {
+            // Update
+            $id = $this->route('role') ? $this->route('role')->id : null;
+            $rules['name'] = 'required|string|max:255|unique:roles,name,'.$id;
+        }
+
         return $rules;
     }
 }

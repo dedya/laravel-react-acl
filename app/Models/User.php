@@ -30,7 +30,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'user_group_id',
+        //'user_group_id',
         'is_active',
         'photo'
     ];

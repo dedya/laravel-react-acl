@@ -45,24 +45,23 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::all(); // Fetch all roles using Spatie
-        $groups = Group::all(); // Fetch groups (assuming you have a Group model)
-    
-        return Inertia::render('Users/Form', [
-            'user' => null,
-            'roles' => $roles,
-            'groups' => $groups,
-            'alertTimer' => config('app.alert_timer'),
-        ]);
+        return $this->form(); // Call form method to render the form with roles and groups
     }
 
     public function edit(User $user)
     {
-        $user->load(['roles','userGroup']); // Load roles and group relationships
-   
-        $roles = Role::all();
-        $groups = Group::all();
-        
+        return $this->form($user);
+    }
+
+    public function form(?User $user = null)
+    {
+        $roles = Role::all(); // Fetch all roles using Spatie
+        $groups = Group::all(); // Fetch groups
+        if ($user) { 
+            $user->load(['roles','userGroup']); // Load roles and group relationships
+        } else {
+            $user = new User(); // Create a new User instance if not provided
+        }
         return Inertia::render('Users/Form', [
             'user' => $user,
             'roles' => $roles,
@@ -71,6 +70,12 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(UserRequest $request)
     {
         $validated = $request->validated();

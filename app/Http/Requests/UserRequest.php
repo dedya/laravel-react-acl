@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
         $rules = [
             'name' => 'required|string|max:255',
             'role' => 'required|string|exists:roles,name',
-            'user_group_id' => 'required|exists:user_groups,id',
+            //'user_group_id' => 'required|exists:user_groups,id',
         ];
 
         if ($this->isMethod('post')) {

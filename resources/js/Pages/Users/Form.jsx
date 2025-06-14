@@ -3,10 +3,6 @@ import { useForm, usePage, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { can } from '@/utils/can';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { swalConfirmDeleteDefaults } from '@/utils/swalDefaults';
@@ -17,24 +13,6 @@ export default function Form({ user, roles, groups, auth }) {
   const photoInput = useRef();
   const [removePhoto, setRemovePhoto] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
-
-  useEffect(() => {
-    // Check if there are any errors
-    if (Object.keys(errors).length > 0) {
-       Object.values(errors).forEach((msg) => {
-        toast.error(msg, {
-          position: "top-right",
-          autoClose: alertTimer || 4000, // or use a prop/config value
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      });
-    }
-  }, [user, errors]);
 
   const { data, setData, post, put, processing } = useForm({
     name: user?.name || '',
@@ -257,7 +235,6 @@ export default function Form({ user, roles, groups, auth }) {
           </form>
         </div>
       </div>
-        <ToastContainer />
     </AuthenticatedLayout>
   );
 }

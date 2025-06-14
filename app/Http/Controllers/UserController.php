@@ -38,8 +38,7 @@ class UserController extends Controller
         
         return Inertia::render('Users/Index', [
             'users' => $query->paginate(10)->withQueryString(),
-            'filters' => $request->only(['name', 'email']),
-            'alertTimer' => config('app.alert_timer'),            
+            'filters' => $request->only(['name', 'email'])        
          ]);
     }
 
@@ -65,8 +64,7 @@ class UserController extends Controller
         return Inertia::render('Users/Form', [
             'user' => $user,
             'roles' => $roles,
-            'groups' => $groups,
-            'alertTimer' => config('app.alert_timer'),
+            'groups' => $groups
         ]);
     }
 

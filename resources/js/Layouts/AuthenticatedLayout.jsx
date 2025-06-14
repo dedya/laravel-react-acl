@@ -5,15 +5,36 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { can } from '@/utils/can';
+
 import Swal from 'sweetalert2';
 import { swalSuccessDefaults, swalErrorDefaults} from '@/utils/swalDefaults';
+
 import { useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function Authenticated({ user, header, children }) {
-    const { flash, alertTimer } = usePage().props;
+    const { flash, alertTimer,errors } = usePage().props;
 
     useEffect(() => {
+    // Show validation errors
+    if (errors && Object.keys(errors).length > 0) {
+      Object.values(errors).forEach((msg) => {
+        toast.error(msg, {
+          position: "top-right",
+          autoClose: alertTimer || 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      });
+    }
+
     console.log('flash.success:', flash?.success);
     if (flash?.success) {
         Swal.fire({
@@ -21,14 +42,15 @@ export default function Authenticated({ user, header, children }) {
         timer: alertTimer || 4000,         
             ...swalSuccessDefaults,
         });
-    }else{
+    }else
+    if (flash?.error) { 
         Swal.fire({
         title: flash.error,
         timer: alertTimer || 4000,         
             ...swalErrorDefaults,
         });
     }
-    }, [flash?.success]);
+    }, [flash?.success, flash?.error, errors, alertTimer]);
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
@@ -150,6 +172,8 @@ export default function Authenticated({ user, header, children }) {
             )}
 
             <main>{children}</main>
+            <ToastContainer />            
         </div>
+        
     );
 }

@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
             'general' => function () {
                 return Lang::get('general');
             },
+            'alertTimer' => config('app.alert_timer'),
             'permissions' => function () {
                 if (!auth()->check()) {
                     return [];

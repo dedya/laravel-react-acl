@@ -6,7 +6,7 @@ import { Head } from '@inertiajs/react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { can } from '@/utils/can';
-import { swalSuccessDefaults, swalConfirmDeleteDefaults } from '@/utils/swalDefaults';
+import { swalSuccessDefaults, swalConfirmDeleteDefaults, swalErrorDefaults } from '@/utils/swalDefaults';
 
 import { FaEdit, FaTrashAlt, FaToggleOn, FaToggleOff } from 'react-icons/fa'; // Add this line
 
@@ -66,6 +66,12 @@ export default function Index({ auth }) {
         title: flash.success,
         timer: alertTimer || 4000,         
           ...swalSuccessDefaults,
+      });
+    }else{
+       Swal.fire({
+        title: flash.error,
+        timer: alertTimer || 4000,         
+          ...swalErrorDefaults,
       });
     }
   }, [flash?.success]);

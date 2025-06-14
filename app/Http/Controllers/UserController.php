@@ -78,20 +78,15 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $validated = $request->validated();
-
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->file('photo')->store('photos', 'public');
-        }
-
-        dispatch(new UpdateUser($validated));
-        $userName = $validated['name'];
-        $message = __('general.data_is_created', ['name' => $userName]);
-        return redirect()->route('users.index')->with('success', $message);
+        return $this->saveUser($request);
     }
 
     public function update(UserRequest $request, User $user)
+    {
+        return $this->saveUser($request, $user);
+    }
+ 
+    private function saveUser(UserRequest $request, ?User $user = null)
     {
         $validated = $request->validated();
 
@@ -100,9 +95,16 @@ class UserController extends Controller
             $validated['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
-        dispatch(new UpdateUser($validated,$user));
-        $userName = $user->name;
-        $message = __('general.data_is_updated', ['name' => $userName]);
+        try {
+            dispatch(new UpdateUser($validated, $user));
+            $message = $user
+                ? __('general.data_is_updated', ['name' => $user->name])
+                : __('general.data_is_created', ['name' => $validated['name']]);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            return redirect()->route('users.index')->with('error', $message);
+        }
+
         return redirect()->route('users.index')->with('success', $message);
     }
 

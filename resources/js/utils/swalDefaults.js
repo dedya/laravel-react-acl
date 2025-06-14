@@ -19,9 +19,11 @@ export const swalSuccessDefaults = {
 };
 
 export const swalErrorDefaults = {
+    toast: true,
+    position: 'top-end',
     icon: 'error',
-    showConfirmButton: true,
-    confirmButtonColor: '#d33', // red
+    showConfirmButton: false,
+    timerProgressBar: true,
     background: '#f8d7da', // light red background
     color: '#721c24', // dark red text
 };

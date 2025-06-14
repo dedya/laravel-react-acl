@@ -5,8 +5,31 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import { can } from '@/utils/can';
+import Swal from 'sweetalert2';
+import { swalSuccessDefaults, swalErrorDefaults} from '@/utils/swalDefaults';
+import { useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
 
 export default function Authenticated({ user, header, children }) {
+    const { flash, alertTimer } = usePage().props;
+
+    useEffect(() => {
+    console.log('flash.success:', flash?.success);
+    if (flash?.success) {
+        Swal.fire({
+        title: flash.success,
+        timer: alertTimer || 4000,         
+            ...swalSuccessDefaults,
+        });
+    }else{
+        Swal.fire({
+        title: flash.error,
+        timer: alertTimer || 4000,         
+            ...swalErrorDefaults,
+        });
+    }
+    }, [flash?.success]);
+
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     return (

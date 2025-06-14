@@ -97,9 +97,9 @@ class UserController extends Controller
 
         try {
             dispatch(new UpdateUser($validated, $user));
-            $message = $user
-                ? __('general.data_is_updated', ['name' => $user->name])
-                : __('general.data_is_created', ['name' => $validated['name']]);
+            $messageKey = $user ? 'data_is_updated' : 'data_is_created';
+            $name = $user ? $user->name : $validated['name'];
+            $message = __('general.' . $messageKey, ['name' => $name]);
         } catch (\Exception $e) {
             $message = $e->getMessage();
             return redirect()->route('users.index')->with('error', $message);
@@ -117,24 +117,28 @@ class UserController extends Controller
 
     public function enable(Request $request, User $user)
     {
-        $user->is_active = true;
-        $user->save();
-
-        // get filter and page from requst, then redirect it with query string
-        $query = $request->only(['name', 'email', 'page']);
-        $message = __('general.set_enabled', ['name' => $user->name]);
-        Log::info('ENABLE USER', ['id' => $user->id, 'query' => $query]);
-        return redirect()->route('users.index', $query)->with('success',$message);
+        return $this->setActive($request, $user, true);
     }
     
     public function disable(Request $request, User $user)
     {
-        $user->is_active = false;
+        return $this->setActive($request, $user, false);
+    }
+
+    private function setActive(Request $request, User $user, $active = true)
+    {
+        $user->is_active = $active;
         $user->save();
-        
+
+        // get filter and page from requst, then redirect it with query string
         $query = $request->only(['name', 'email', 'page']);
+
+        if($active)
+            $message = __('general.set_enabled', ['name' => $user->name]);
+        else
+            $message = __('general.set_disabled', ['name' => $user->name]);
+
         Log::info('ENABLE USER', ['id' => $user->id, 'query' => $query]);
-        $message = __('general.set_disabled', ['name' => $user->name]);
         return redirect()->route('users.index', $query)->with('success',$message);
     }
 }

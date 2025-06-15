@@ -7,9 +7,14 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { swalConfirmDeleteDefaults } from '@/utils/swalDefaults';
 
+// Import Form Components
+import {
+  TextInput,
+} from '@/Components/Form';
+
 export default function Form({ user, roles, groups, auth }) {
   const isEdit = !!user;
-  const { errors, alertTimer, general} = usePage().props;
+  const { errors, general} = usePage().props;
   const photoInput = useRef();
   const [removePhoto, setRemovePhoto] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -60,46 +65,41 @@ export default function Form({ user, roles, groups, auth }) {
       <div className="max-w-xl mx-auto py-8">
         <div className="bg-white rounded shadow p-6">
           <form onSubmit={handleSubmit} className="space-y-5" encType="multipart/form-data">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {general?.name}
-                <span className="text-red-500 ml-1">*</span>
-              </label>
-              <input
-                className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
+            <TextInput
+                label= {general?.name}
+                name="name"
                 value={data.name}
                 onChange={e => setData('name', e.target.value)}
-              />
-              {errors.name && <div className="text-red-500 text-sm mt-1">{errors.name}</div>}
-            </div>
+                error={errors.name}
+                required
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {general?.email}
-                <span className="text-red-500 ml-1">*</span>
-              </label>
-              <input
+            <TextInput
+                label={general?.email}
+                name="email"
                 type="email"
-                className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
                 value={data.email}
                 onChange={e => setData('email', e.target.value)}
-              />
-              {errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
-            </div>
+                error={errors.email}
+                required
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {general?.password} {isEdit ? <span className="text-xs text-gray-400">({general?.leave_blank})</span> : ''}
-                {!isEdit && <span className="text-red-500 ml-1">*</span>}
-              </label>
-              <input
-                type="password"
-                className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
-                value={data.password}
-                onChange={e => setData('password', e.target.value)}
-              />
-              {errors.password && <div className="text-red-500 text-sm mt-1">{errors.password}</div>}
-            </div>
+            <TextInput
+              label={
+                <>
+                  {general?.password}
+                  {isEdit && (
+                    <span className="text-xs text-gray-400">({general?.leave_blank})</span>
+                  )}
+                </>
+              }
+              name="password"
+              type="password"
+              value={data.password}
+              onChange={e => setData('password', e.target.value)}
+              error={errors.password}
+              required={!isEdit}
+            />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

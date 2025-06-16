@@ -16,6 +16,7 @@ To setup :
 - run 'php artisan db:seed --class=AdminRolesAnUserSeederdPermissionsSeeder' to 20 sample user if needed (optional)
 - Copy .env.example to .env
 - Update the .env
+- empty folder ./bootstrap/cache
 - run : php artisan storage:link , to publish upload folder
 - run : php artisan optimize, to apply changes in .env
 

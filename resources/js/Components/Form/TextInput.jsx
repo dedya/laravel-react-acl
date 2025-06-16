@@ -9,6 +9,7 @@ export default function TextInput({
     placeholder,
     disabled = false,
     autoComplete = 'off',
+    inputRef = null
 }) {
     return (
         <div>
@@ -17,6 +18,7 @@ export default function TextInput({
                 {required && <span className="text-red-500 ml-1">*</span>}
             </label>
             <input
+                ref={inputRef}
                 id={name}
                 name={name}
                 type={type}

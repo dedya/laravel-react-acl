@@ -14,6 +14,15 @@ import {
 } from '@/Components/Form';
 
 export default function Form({ user, roles, groups, auth }) {
+
+  const firstInputRef = useRef(null);
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, []);
+
   const isEdit = !!user;
   const { errors, general} = usePage().props;
   const photoInput = useRef();
@@ -72,6 +81,7 @@ export default function Form({ user, roles, groups, auth }) {
                 value={data.name}
                 onChange={e => setData('name', e.target.value)}
                 error={errors.name}
+                inputRef={firstInputRef} // Focus on this input 
                 required
             />
 

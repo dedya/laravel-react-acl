@@ -36,7 +36,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $manager = Role::firstOrCreate(['name' => 'manager']);
         $manager->syncPermissions([
-            'view-user',
+            'read-user',
             'update-user',
         ]);
 

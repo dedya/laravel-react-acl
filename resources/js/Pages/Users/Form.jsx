@@ -10,6 +10,7 @@ import { swalConfirmDeleteDefaults } from '@/utils/swalDefaults';
 // Import Form Components
 import {
   TextInput,
+  SelectDropdown
 } from '@/Components/Form';
 
 export default function Form({ user, roles, groups, auth }) {
@@ -101,45 +102,25 @@ export default function Form({ user, roles, groups, auth }) {
               required={!isEdit}
             />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {general?.role}
-                <span className="text-red-500 ml-1">*</span>
-              </label>
-              <select
-                className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
-                value={data.role}
-                onChange={(e) => setData('role', e.target.value)}
-              >
-                <option value=""></option>
-                {roles.map((role) => (
-                  <option key={role.name} value={role.name}>
-                    {role.name}
-                  </option>
-                ))}
-              </select>
-              {errors.role && <div className="text-red-500 text-sm mt-1">{errors.role}</div>}
-            </div>
+            <SelectDropdown
+              label={general?.role}
+              name="role"
+              value={data.role}
+              onChange={e => setData('role', e.target.value)}
+              options={roles.map(role => ({ value: role.name, label: role.name }))}
+              error={errors.role}
+              required
+            />
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                {general?.user_group}
-                <span className="text-red-500 ml-1">*</span>
-              </label>
-              <select
-                className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-200"
-                value={data.user_group_id}
-                onChange={(e) => setData('user_group_id', e.target.value)}
-              >
-                <option value=""></option>
-                {groups.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ))}
-              </select>
-              {errors.user_group_id && <div className="text-red-500 text-sm mt-1">{errors.user_group_id}</div>}
-            </div>
+            <SelectDropdown
+              label={general?.user_group}
+              name="user_group_id"
+              value={data.user_group_id}
+              onChange={e => setData('user_group_id', e.target.value)}
+              options={groups.map(group => ({ value: group.id, label: group.name }))}
+              error={errors.user_group_id}
+              required
+            />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

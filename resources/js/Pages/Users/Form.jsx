@@ -1,7 +1,6 @@
 import React, { useRef, useEffect,useState } from 'react';
-import { useForm, usePage, Link } from '@inertiajs/react';
+import { useForm, usePage, Link, Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
 import { can } from '@/utils/can';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';

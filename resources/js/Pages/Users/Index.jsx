@@ -137,7 +137,7 @@ export default function Index({ auth }) {
               {users.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-4 py-4 text-center text-gray-400">
-                    {general?.no_users_found || 'No users found.'}
+                    {general?.no_data_found}
                   </td>
                 </tr>
               )}
@@ -175,7 +175,7 @@ export default function Index({ auth }) {
                                 })
                               }
                               className="text-green-600 hover:underline"
-                              title="Enable"
+                              title={general?.enable || "Enable"} 
                             >
                               <FaToggleOn size={24} />
                             </button>
@@ -188,7 +188,7 @@ export default function Index({ auth }) {
                                 })
                               }
                               className="text-yellow-600 hover:underline"
-                              title="Disable"
+                              title={general?.disable || "Disable"}
                             >
                               <FaToggleOff size={24} />
                             </button>
